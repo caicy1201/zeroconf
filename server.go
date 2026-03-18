@@ -525,7 +525,7 @@ func (s *Server) serviceTypeName(resp *dns.Msg, ttl uint32) {
 }
 
 // Perform probing & announcement
-//TODO: implement a proper probing & conflict resolution
+// TODO: implement a proper probing & conflict resolution
 func (s *Server) probe() {
 	q := new(dns.Msg)
 	q.SetQuestion(s.service.ServiceInstanceName(), dns.TypePTR)
@@ -617,14 +617,14 @@ func (s *Server) unregister() error {
 }
 
 func (s *Server) appendAddrs(list []dns.RR, ttl uint32, ifIndex int, flushCache bool) []dns.RR {
-	v4 := make([]net.IP,0)
-	v6 := make([]net.IP,0)
+	v4 := make([]net.IP, 0)
+	v6 := make([]net.IP, 0)
 	if len(v4) == 0 && len(v6) == 0 {
 		iface, _ := net.InterfaceByIndex(ifIndex)
 		if iface != nil {
 			a4, a6 := addrsForInterface(iface)
-			v4 = append(v4, a4...)
-			v6 = append(v6, a6...)
+			v4 = append(v4, a4[0])
+			v6 = append(v6, a6[0])
 		}
 	}
 	if ttl > 0 {
