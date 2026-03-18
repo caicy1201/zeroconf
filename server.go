@@ -617,8 +617,8 @@ func (s *Server) unregister() error {
 }
 
 func (s *Server) appendAddrs(list []dns.RR, ttl uint32, ifIndex int, flushCache bool) []dns.RR {
-	v4 := s.service.AddrIPv4
-	v6 := s.service.AddrIPv6
+	v4 := make([]net.IP,0)
+	v6 := make([]net.IP,0)
 	if len(v4) == 0 && len(v6) == 0 {
 		iface, _ := net.InterfaceByIndex(ifIndex)
 		if iface != nil {
