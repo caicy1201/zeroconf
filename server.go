@@ -619,12 +619,14 @@ func (s *Server) unregister() error {
 func (s *Server) appendAddrs(list []dns.RR, ttl uint32, ifIndex int, flushCache bool) []dns.RR {
 	v4 := make([]net.IP, 0)
 	v6 := make([]net.IP, 0)
-	if len(v4) == 0 && len(v6) == 0 {
-		iface, _ := net.InterfaceByIndex(ifIndex)
-		if iface != nil {
-			a4, a6 := addrsForInterface(iface)
-			v4 = append(v4, a4[0])
-			v6 = append(v6, a6[0])
+	iSrc, err := net.InterfaceByIndex(ifIndex)
+	if err == nil {
+		for _, i := range s.ifaces {
+			if i.Name == iSrc.Name {
+				a4, a6 := addrsForInterface(iSrc)
+				v4 = append(v4, a4...)
+				v6 = append(v6, a6...)
+			}
 		}
 	}
 	if ttl > 0 {
