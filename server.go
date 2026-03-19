@@ -624,7 +624,7 @@ func (s *Server) appendAddrs(list []dns.RR, ttl uint32, ifIndex int, flushCache 
 		for _, i := range s.ifaces {
 			if i.Name == iSrc.Name {
 				a4, a6 := addrsForInterface(iSrc)
-				v4 = append(v4, a4...)
+				v4 = append(v4, a4[0])
 				v6 = append(v6, a6...)
 			}
 		}
