@@ -24,11 +24,11 @@ const (
 
 // Register a service by given arguments. This call will take the system's hostname
 // and lookup IP by that hostname.
-func Register(instance, service, domain string, port int, text []string, ifaces []net.Interface) (*Server, error) {
+func Register(instance, service, domain string, port int, text []string, ifaces []net.Interface, hostName string) (*Server, error) {
 	entry := NewServiceEntry(instance, service, domain)
 	entry.Port = port
 	entry.Text = text
-
+	entry.HostName = hostName
 	if entry.Instance == "" {
 		return nil, fmt.Errorf("missing service instance name")
 	}
