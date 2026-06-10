@@ -238,6 +238,7 @@ func (s *Server) recv4(c *ipv4.PacketConn) {
 	if c == nil {
 		return
 	}
+	c.SetMulticastTTL(255)
 	buf := make([]byte, 65536)
 	s.shutdownEnd.Add(1)
 	defer s.shutdownEnd.Done()
