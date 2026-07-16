@@ -255,9 +255,39 @@ func (s *Server) recv4(c *ipv4.PacketConn) {
 			if cm != nil {
 				ifIndex = cm.IfIndex
 			}
+			if ifIndex == 0 {
+				if udpAddr, ok := from.(*net.UDPAddr); ok {
+					idx, err := FindInterfaceByIP(s.ifaces, udpAddr.IP)
+					if err == nil {
+						ifIndex = idx
+					} else {
+						ifIndex = 0
+					}
+				}
+			}
 			_ = s.parsePacket(buf[:n], ifIndex, from)
 		}
 	}
+}
+
+func FindInterfaceByIP(interfaces []net.Interface, packetIP net.IP) (int, error) {
+	for _, ifi := range interfaces {
+		addrs, err := ifi.Addrs()
+		if err != nil {
+			continue
+		}
+		for _, addr := range addrs {
+			if ipNet, ok := addr.(*net.IPNet); ok {
+				if ipNet.IP.Equal(packetIP) {
+					return ifi.Index, nil
+				}
+				if ipNet.Contains(packetIP) {
+					return ifi.Index, nil
+				}
+			}
+		}
+	}
+	return 0, nil // 未找到匹配的网卡，返回 0
 }
 
 // recv is a long running routine to receive packets from an interface
