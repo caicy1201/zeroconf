@@ -238,7 +238,7 @@ func (s *Server) recv4(c *ipv4.PacketConn) {
 	if c == nil {
 		return
 	}
-	c.SetMulticastTTL(3)
+	c.SetMulticastTTL(255)
 	buf := make([]byte, 65536)
 	s.shutdownEnd.Add(1)
 	defer s.shutdownEnd.Done()
@@ -295,7 +295,6 @@ func (s *Server) recv6(c *ipv6.PacketConn) {
 	if c == nil {
 		return
 	}
-	c.SetMulticastHopLimit(3)
 	buf := make([]byte, 65536)
 	s.shutdownEnd.Add(1)
 	defer s.shutdownEnd.Done()
